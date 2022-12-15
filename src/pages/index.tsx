@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { GetStaticProps } from "next";
+import { useSession } from 'next-auth/react';
 import { SubscribeButton } from "../components/SubscribeButton";
 import styles from './home.module.scss';
 import { stripe } from "../services/stripe";
@@ -12,12 +13,13 @@ interface HomeProps {
 }
 
 export default function Home({ product }: HomeProps) {
+  const { data: session, status } = useSession();
   return (
     <>
       <Head><title>Inicio | ig.news</title></Head>
       <main className={styles.contentContainer}>
         <section className={styles.hero}>
-          <span>👏 Olá, Seja bem vindo!</span>
+          <span>{status === "authenticated" ? `👏 Olá ${session.user?.name}, seja bem vindo!` : '👏 Olá, Seja bem vindo!'} </span>
           <h1>Notícias sobre o mundo do <span>React</span></h1>
           <p>
             Tenha acesso a todas as publicações <br />
