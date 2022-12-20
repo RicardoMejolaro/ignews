@@ -1,19 +1,17 @@
 import { SingInButton } from '../SignInButton';
-import Link from 'next/link';
 import styles from './styles.module.scss';
+import ActiveLink from '../ActiveLink';
 
 export function Header() {
+
+
     return (
         <header className={styles.headerContainer}>
             <div className={styles.headerContent}>
                 <img src="/images/logo.svg" alt="ig.news" />
                 <nav>
-                    <Link href="/" className={styles.active}>
-                        Home
-                    </Link>
-                    <Link href="/posts" prefetch>
-                        Posts
-                    </Link>
+                    <ActiveLink href="/" activeClassName={styles.active} text='Home' />
+                    <ActiveLink href="/posts" activeClassName={styles.active} text='Posts' />
                 </nav>
                 <SingInButton />
             </div>
