@@ -1,10 +1,19 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { getPrismicClient } from '../../services/prismicio';
-import Prismic from '@prismicio/client';
 import styles from './styles.module.scss';
 
-export default function Posts() {
+type Posts = {
+    slug: string,
+    title: string,
+    excerpt: string,
+    updateAt: string
+}
+interface PostsProps {
+    posts: Posts[]
+}
+
+export default function Posts({ posts }: PostsProps) {
     return (
         <>
             <Head>
@@ -13,21 +22,14 @@ export default function Posts() {
 
             <main className={styles.container}>
                 <div className={styles.posts}>
-                    <a href="">
-                        <time>12 de março de 2021</time>
-                        <strong>React do zero: componentização, propriedades e estado</strong>
-                        <p>Esse post é a primeira parte da série “React do zero”. Se você chegou até o React sem utilizar nenhuma outra biblioteca componentizada como Vue, Angular ou Polymer, provavelmente deve ter sofrido ou até estar sofrendo para entender o que é um componente, por que separar o código em componentes, o que é estado, wtf é Redux, etc… Fica tranquilo, nesse post você vai entender tudo isso.</p>
-                    </a>
-                    <a href="">
-                        <time>12 de março de 2021</time>
-                        <strong>React do zero: componentização, propriedades e estado</strong>
-                        <p>Esse post é a primeira parte da série “React do zero”. Se você chegou até o React sem utilizar nenhuma outra biblioteca componentizada como Vue, Angular ou Polymer, provavelmente deve ter sofrido ou até estar sofrendo para entender o que é um componente, por que separar o código em componentes, o que é estado, wtf é Redux, etc… Fica tranquilo, nesse post você vai entender tudo isso.</p>
-                    </a>
-                    <a href="">
-                        <time>12 de março de 2021</time>
-                        <strong>React do zero: componentização, propriedades e estado</strong>
-                        <p>Esse post é a primeira parte da série “React do zero”. Se você chegou até o React sem utilizar nenhuma outra biblioteca componentizada como Vue, Angular ou Polymer, provavelmente deve ter sofrido ou até estar sofrendo para entender o que é um componente, por que separar o código em componentes, o que é estado, wtf é Redux, etc… Fica tranquilo, nesse post você vai entender tudo isso.</p>
-                    </a>
+                    {posts.map(post => (
+                        <a href="" key={post.slug}>
+                            <time>{post.updateAt}</time>
+                            <strong>{post.title}</strong>
+                            <p>{post.excerpt}</p>
+                        </a>
+                    ))}
+
                 </div>
             </main>
         </>
@@ -39,9 +41,23 @@ export const getStaticProps: GetStaticProps = async () => {
 
     const response = await prismic.getAllByType('posts')
 
-    console.log(JSON.stringify(response, null, 2));
+
+
+    const posts = response.map(post => {
+        return {
+            slug: post.uid,
+            title: post.data.title,
+            excerpt: post.data.content.find((content: { type: string; }) => content.type === 'paragraph')?.text ?? '',
+            updateAt: new Date(post.last_publication_date).toLocaleDateString('pr-BR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+            })
+        };
+
+    });
 
     return {
-        props: { response }, // Will be passed to the page component as props
+        props: { posts }, // Will be passed to the page component as props
     }
 }
