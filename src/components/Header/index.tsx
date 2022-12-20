@@ -1,4 +1,5 @@
 import { SingInButton } from '../SignInButton';
+import Link from 'next/link';
 import styles from './styles.module.scss';
 
 export function Header() {
@@ -7,8 +8,12 @@ export function Header() {
             <div className={styles.headerContent}>
                 <img src="/images/logo.svg" alt="ig.news" />
                 <nav>
-                    <a className={styles.active} href="">Home</a>
-                    <a className={styles.active} href="">Posts</a>
+                    <Link href="/" className={styles.active}>
+                        Home
+                    </Link>
+                    <Link href="/posts" prefetch>
+                        Posts
+                    </Link>
                 </nav>
                 <SingInButton />
             </div>
