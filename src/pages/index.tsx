@@ -16,7 +16,7 @@ export default function Home({ product }: HomeProps) {
   const { data: session, status } = useSession();
   return (
     <>
-      <Head><title>Inicio | ig.news</title></Head>
+      <Head><title>{'Inicio | ig.news'}</title></Head>
       <main className={styles.contentContainer}>
         <section className={styles.hero}>
           <span>{status === "authenticated" ? `👏 Olá ${session.user?.name}, seja bem vindo!` : '👏 Olá, Seja bem vindo!'} </span>

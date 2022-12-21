@@ -19,7 +19,7 @@ export default function Post({ post }: PostProps) {
     return (
         <>
             <Head>
-                <title>{post.title} | Ignews</title>
+                <title>{post.title + '| Ignews'}</title>
             </Head>
 
             <main className={styles.container}>
@@ -37,7 +37,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query }) => 
     const session = await getSession({ req });
     const { slug } = query;
 
-    //if(!session) return;
+    if (!session?.activeSubscription) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false
+            }
+        }
+    };
 
     const prismic = getPrismicClient(req.cookies);
 
